@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 
 using Amazon.Lambda.Core;
@@ -12,16 +14,23 @@ namespace NotifyIncomingToAnyService
 {
     public class Function
     {
-        
+        private static HttpClient client = new HttpClient();
+
         /// <summary>
-        /// A simple function that takes a string and does a ToUpper
+        /// 着信したらLINE Notifyに通知する
+        /// </summary>
         /// </summary>
         /// <param name="input"></param>
         /// <param name="context"></param>
         /// <returns></returns>
-        public string FunctionHandler(string input, ILambdaContext context)
+        public async Task<object> FunctionHandler(TelInfo input, ILambdaContext context)
         {
-            return input?.ToUpper();
+            var json = @"{""foo"":""hoge"", ""bar"":123, ""baz"":[""あ"", ""い"", ""う""]}";
+            var content = new StringContent(json, Encoding.UTF8);
+            client.DefaultRequestHeaders.Add("Authorization", $"Bearer {Environment.GetEnvironmentVariable("accessToken")}");
+            var result = await client.PostAsync($"https://notify-api.line.me/api/notify/?message={input.telNum ?? "非通知"}から着信がありました", content);
+            client = new HttpClient();
+            return result;
         }
     }
 }
