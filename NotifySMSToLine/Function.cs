@@ -14,7 +14,14 @@ namespace NotifySMSToLine
 {
     public class Function
     {
-        private static HttpClient client = new HttpClient();
+        private static HttpClient client;
+
+        public Function()
+        {
+            client = new HttpClient();
+            // ŠÂ‹«•Ï”‚ÍuEnvironment.GetEnvironmentVariable("accessToken")v‚Åæ“¾‚Å‚«‚é
+            client.DefaultRequestHeaders.Add("Authorization", $"Bearer {Environment.GetEnvironmentVariable("accessToken")}");
+        }
 
         /// <summary>
         /// SMS‚ª—ˆ‚½‚çLINE Notify‚É’Ê’m‚·‚é
@@ -30,12 +37,7 @@ namespace NotifySMSToLine
 
             string sentDate = DateTimeOffset.FromUnixTimeSeconds(input.sentTimestamp).AddHours(9).ToString("yyyy/MM/dd(ddd) HH:mm:ss", culture);
 
-            // ŠÂ‹«•Ï”‚ÍuEnvironment.GetEnvironmentVariable("accessToken")v‚Åæ“¾‚Å‚«‚é
-            client.DefaultRequestHeaders.Add("Authorization", $"Bearer {Environment.GetEnvironmentVariable("accessToken")}");
-
-            var result = await client.PostAsync($"https://notify-api.line.me/api/notify/?message=\ny“à—ez\n{input.messageContent}\n\nyóMz\n{sentDate}\n\ny‘—MŒ³z\n{input.senderPhoneNumber}", null);
-            client = new HttpClient();
-            return result;
+            return await client.PostAsync($"https://notify-api.line.me/api/notify/?message=\ny“à—ez\n{input.messageContent}\n\nyóMz\n{sentDate}\n\ny‘—MŒ³z\n{input.senderPhoneNumber}", null);
         }
     }
 }
