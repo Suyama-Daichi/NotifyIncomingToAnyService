@@ -13,10 +13,10 @@
     "function-runtime" : "dotnetcore2.1",
     "function-memory-size" : 512,
     "function-timeout"     : 15,
-    "function-handler"     : "NotifyIncomingToAnyService::NotifyIncomingToAnyService.Function::FunctionHandler",
-    "function-name"        : "NotyfyIncomingToAnyService",
+    "function-handler"     : "notifySMSToLine::NotifySMSToLine.Function::FunctionHandler",
+    "function-name"        : "notifySMSToLine",
     "function-description" : "",
     "function-role"        : "arn:aws:iam::047091748707:role/TrialLambdaRole",
     "tracing-mode"         : "PassThrough",
-    "environment-variables" : ""
+    "environment-variables" : "\"accessToken\"=\"QFZIZyR5KZcKPTjzzlo5WkylSt0O8Xjcb6qzOdbVh2Y\""
 }
