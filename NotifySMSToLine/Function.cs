@@ -25,16 +25,15 @@ namespace NotifySMSToLine
         /// <returns></returns>
         public async Task<object> FunctionHandler(SMSInfo input, ILambdaContext context)
         {
-            var json = @"{""foo"":""hoge"", ""bar"":123, ""baz"":[""‚ "", ""‚¢"", ""‚¤""]}";
-            var content = new StringContent(json, Encoding.UTF8);
-
             // ƒŠ[ƒWƒ‡ƒ“‚ğ“ú–{‚Éİ’è
             var culture = System.Globalization.CultureInfo.GetCultureInfo("ja-JP");
 
             string sentDate = DateTimeOffset.FromUnixTimeSeconds(input.sentTimestamp).AddHours(9).ToString("yyyy/MM/dd(ddd) HH:mm:ss", culture);
 
+            // ŠÂ‹«•Ï”‚ÍuEnvironment.GetEnvironmentVariable("accessToken")v‚Åæ“¾‚Å‚«‚é
             client.DefaultRequestHeaders.Add("Authorization", $"Bearer {Environment.GetEnvironmentVariable("accessToken")}");
-            var result = await client.PostAsync($"https://notify-api.line.me/api/notify/?message=\ny“à—ez\n{input.messageContent}\n\nyóMz\n{sentDate}\n\ny‘—MŒ³z\n{input.senderPhoneNumber}", content);
+
+            var result = await client.PostAsync($"https://notify-api.line.me/api/notify/?message=\ny“à—ez\n{input.messageContent}\n\nyóMz\n{sentDate}\n\ny‘—MŒ³z\n{input.senderPhoneNumber}", null);
             client = new HttpClient();
             return result;
         }
